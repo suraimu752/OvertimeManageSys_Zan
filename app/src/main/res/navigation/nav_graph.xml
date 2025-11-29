@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.overtimemanagesys_zan.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_OvertimeInputFragment"
+            app:destination="@id/OvertimeInputFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_AddEmployeeFragment"
+            app:destination="@id/AddEmployeeFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_HiddenEmployeesFragment"
+            app:destination="@id/HiddenEmployeesFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_DateSelectCalendarFragment"
+            app:destination="@id/DateSelectCalendarFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/OvertimeInputFragment"
+        android:name="com.example.overtimemanagesys_zan.OvertimeInputFragment"
+        android:label="残業時間入力"
+        tools:layout="@layout/fragment_overtime_input">
+        
+        <argument
+            android:name="employeeId"
+            app:argType="long" />
+        <argument
+            android:name="selectedDate"
+            app:argType="string"
+            android:defaultValue="" />
+        
+        <action
+            android:id="@+id/action_OvertimeInputFragment_to_CalendarFragment"
+            app:destination="@id/CalendarFragment"
+            app:popUpTo="@id/OvertimeInputFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/CalendarFragment"
+        android:name="com.example.overtimemanagesys_zan.CalendarFragment"
+        android:label="カレンダー"
+        tools:layout="@layout/fragment_calendar">
+        
+        <argument
+            android:name="employeeId"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_CalendarFragment_to_OvertimeInputFragment"
+            app:destination="@id/OvertimeInputFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/AddEmployeeFragment"
+        android:name="com.example.overtimemanagesys_zan.AddEmployeeFragment"
+        android:label="人員追加"
+        tools:layout="@layout/fragment_add_employee" />
+    
+    <fragment
+        android:id="@+id/HiddenEmployeesFragment"
+        android:name="com.example.overtimemanagesys_zan.HiddenEmployeesFragment"
+        android:label="非表示人員"
+        tools:layout="@layout/fragment_hidden_employees" />
+    
+    <fragment
+        android:id="@+id/DateSelectCalendarFragment"
+        android:name="com.example.overtimemanagesys_zan.DateSelectCalendarFragment"
+        android:label="カレンダー"
+        tools:layout="@layout/fragment_calendar">
+        
+        <action
+            android:id="@+id/action_DateSelectCalendarFragment_to_DateOvertimeListFragment"
+            app:destination="@id/DateOvertimeListFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/DateOvertimeListFragment"
+        android:name="com.example.overtimemanagesys_zan.DateOvertimeListFragment"
+        android:label="残業時間一覧"
+        tools:layout="@layout/fragment_date_overtime_list">
+        
+        <argument
+            android:name="selectedDate"
+            app:argType="string" />
+        
+        <action
+            android:id="@+id/action_DateOvertimeListFragment_to_OvertimeInputFragment"
+            app:destination="@id/OvertimeInputFragment" />
+    </fragment>
+</navigation>

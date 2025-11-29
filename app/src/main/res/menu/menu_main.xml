@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.overtimemanagesys_zan.MainActivity">
+    <item
+        android:id="@+id/action_calendar"
+        android:orderInCategory="0"
+        android:title="カレンダー"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_add_employee"
+        android:orderInCategory="1"
+        android:title="人員追加"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_hidden_employees"
+        android:orderInCategory="2"
+        android:title="非表示人員"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="3"
+        android:title="並び替え"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="ifRoom" />
+</menu>
