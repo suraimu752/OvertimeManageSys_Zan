@@ -46,8 +46,10 @@ class EmployeeAdapter(
                 (binding.root as? CardView)?.cardElevation = 4f
             }
 
-            // 残業時間に応じた背景色の設定
-            val backgroundColor = calculateBackgroundColor(employeeWithOvertime.overtimeThisMonth)
+            // 残業時間に応じた背景色と文字色の設定
+            val hours = employeeWithOvertime.overtimeThisMonth
+            val backgroundColor = calculateBackgroundColor(hours)
+            val textColor = calculateTextColor(hours)
             
             // 角丸の背景を作成
             val density = binding.root.resources.displayMetrics.density
@@ -59,9 +61,7 @@ class EmployeeAdapter(
             shape.setColor(backgroundColor)
             
             binding.textViewThisMonth.background = shape
-            
-            // 背景色に応じてテキスト色を変更（視認性確保）
-            binding.textViewThisMonth.setTextColor(calculateTextColor(backgroundColor))
+            binding.textViewThisMonth.setTextColor(textColor)
 
             binding.textViewThisMonth.setOnClickListener {
                 onThisMonthClick(employee)
@@ -85,38 +85,44 @@ class EmployeeAdapter(
 
         private fun calculateBackgroundColor(hours: Double): Int {
             val white = Color.WHITE
-            val yellow = Color.YELLOW
             val orange = Color.parseColor("#FFA500")
             val red = Color.RED
+            val black = Color.BLACK
 
             val evaluator = ArgbEvaluator()
 
             return when {
                 hours <= 0 -> white
                 hours < 45 -> {
+                    // 0-45: 白→オレンジ
                     val fraction = (hours / 45.0).toFloat()
-                    evaluator.evaluate(fraction, white, yellow) as Int
+                    evaluator.evaluate(fraction, white, orange) as Int
                 }
                 hours < 60 -> {
+                    // 45-60: オレンジ→赤
                     val fraction = ((hours - 45) / (60 - 45)).toFloat()
-                    evaluator.evaluate(fraction, yellow, orange) as Int
-                }
-                hours < 80 -> {
-                    val fraction = ((hours - 60) / (80 - 60)).toFloat()
                     evaluator.evaluate(fraction, orange, red) as Int
                 }
-                else -> red
+                hours < 80 -> {
+                    // 60-80: 赤→黒
+                    val fraction = ((hours - 60) / (80 - 60)).toFloat()
+                    evaluator.evaluate(fraction, red, black) as Int
+                }
+                else -> black
             }
         }
 
-        private fun calculateTextColor(backgroundColor: Int): Int {
-            val red = Color.red(backgroundColor)
-            val green = Color.green(backgroundColor)
-            val blue = Color.blue(backgroundColor)
-            val luminance = 0.299 * red + 0.587 * green + 0.114 * blue
-            
-            // 輝度が高い（明るい）場合は黒、低い（暗い）場合は白
-            return if (luminance > 128) Color.BLACK else Color.WHITE
+        private fun calculateTextColor(hours: Double): Int {
+            val black = Color.BLACK
+            val white = Color.WHITE
+
+            return if (hours < 45) {
+                // 45時間未満: 黒
+                black
+            } else {
+                // 45時間以上: 白
+                white
+            }
         }
 
         fun onDragStart() {

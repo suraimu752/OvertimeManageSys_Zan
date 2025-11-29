@@ -123,11 +123,20 @@ class OvertimeInputFragment : Fragment() {
         }
         updateMinusButtonState()
 
-        // 明日ボタンの設定
+        // 明日ボタンの設定（トグル）
         binding.buttonTomorrow.setOnClickListener {
-            val tomorrow = LocalDate.now().plusDays(1)
-            val tomorrowString = tomorrow.format(dateFormatter)
-            updateSelectedDate(tomorrowString)
+            val today = LocalDate.now()
+            val tomorrow = today.plusDays(1)
+            val currentDate = LocalDate.parse(selectedDate, dateFormatter)
+            
+            // 今日と明日をトグル
+            val newDate = if (currentDate == tomorrow) {
+                today
+            } else {
+                tomorrow
+            }
+            val newDateString = newDate.format(dateFormatter)
+            updateSelectedDate(newDateString)
         }
 
         // クリアボタン

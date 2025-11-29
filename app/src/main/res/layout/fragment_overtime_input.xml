@@ -82,7 +82,9 @@
         android:layout_marginBottom="4dp"
         android:layout_marginStart="4dp"
         android:text="明日"
-        android:textSize="16sp"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@id/button4h"
         app:layout_constraintEnd_toEndOf="@id/button4h"
         app:layout_constraintStart_toStartOf="@id/button4h" />
