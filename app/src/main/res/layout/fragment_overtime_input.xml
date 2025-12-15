@@ -1,159 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".OvertimeInputFragment">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/textViewEmployeeName"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="従業員名"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/buttonCalendar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="16dp"
+        tools:context=".OvertimeInputFragment">
 
-    <ImageButton
-        android:id="@+id/buttonCalendar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@android:drawable/ic_menu_my_calendar"
-        android:contentDescription="カレンダー"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textViewEmployeeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="従業員名"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/buttonCalendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewCurrentMonthTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="今月の合計: 0.0h"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewEmployeeName" />
+        <ImageButton
+            android:id="@+id/buttonCalendar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_my_calendar"
+            android:contentDescription="カレンダー"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="日付: 2024-01-01"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCurrentMonthTotal" />
+        <TextView
+            android:id="@+id/textViewCurrentMonthTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="今月の合計: 0.0h"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewEmployeeName" />
 
-    <TextView
-        android:id="@+id/textViewTempInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="仮入力: 0.0h"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:padding="24dp"
-        android:background="@android:drawable/edit_text"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDate" />
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="日付: 2024-01-01"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewCurrentMonthTotal" />
 
-    <Button
-        android:id="@+id/buttonMinus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="-"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/button05h"
-        app:layout_constraintEnd_toEndOf="@id/button05h"
-        app:layout_constraintStart_toStartOf="@id/button05h" />
+        <TextView
+            android:id="@+id/textViewTempInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="仮入力: 0.0h"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="24dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewDate" />
 
-    <Button
-        android:id="@+id/buttonTomorrow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginStart="4dp"
-        android:text="明日"
-        android:textSize="12sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        app:layout_constraintBottom_toTopOf="@id/button4h"
-        app:layout_constraintEnd_toEndOf="@id/button4h"
-        app:layout_constraintStart_toStartOf="@id/button4h" />
+        <Button
+            android:id="@+id/buttonMinus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="-"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/button05h"
+            app:layout_constraintEnd_toEndOf="@id/button05h"
+            app:layout_constraintStart_toStartOf="@id/button05h" />
 
-    <Button
-        android:id="@+id/button05h"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="4dp"
-        android:text="0.5h"
-        app:layout_constraintEnd_toStartOf="@id/button1h"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTempInput"
-        android:layout_marginTop="80dp" />
+        <Button
+            android:id="@+id/buttonTomorrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
+            android:text="明日"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toTopOf="@id/button4h"
+            app:layout_constraintEnd_toEndOf="@id/button4h"
+            app:layout_constraintStart_toStartOf="@id/button4h" />
 
-    <Button
-        android:id="@+id/button1h"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:text="1h"
-        app:layout_constraintEnd_toStartOf="@id/button2h"
-        app:layout_constraintStart_toEndOf="@id/button05h"
-        app:layout_constraintTop_toTopOf="@id/button05h" />
+        <Button
+            android:id="@+id/button05h"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="4dp"
+            android:text="0.5h"
+            app:layout_constraintEnd_toStartOf="@id/button1h"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewTempInput"
+            android:layout_marginTop="80dp" />
 
-    <Button
-        android:id="@+id/button2h"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:text="2h"
-        app:layout_constraintEnd_toStartOf="@id/button4h"
-        app:layout_constraintStart_toEndOf="@id/button1h"
-        app:layout_constraintTop_toTopOf="@id/button05h" />
+        <Button
+            android:id="@+id/button1h"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="1h"
+            app:layout_constraintEnd_toStartOf="@id/button2h"
+            app:layout_constraintStart_toEndOf="@id/button05h"
+            app:layout_constraintTop_toTopOf="@id/button05h" />
 
-    <Button
-        android:id="@+id/button4h"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="4dp"
-        android:text="4h"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button2h"
-        app:layout_constraintTop_toTopOf="@id/button05h" />
+        <Button
+            android:id="@+id/button2h"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="2h"
+            app:layout_constraintEnd_toStartOf="@id/button4h"
+            app:layout_constraintStart_toEndOf="@id/button1h"
+            app:layout_constraintTop_toTopOf="@id/button05h" />
 
-    <Button
-        android:id="@+id/buttonClear"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="クリア"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button05h" />
+        <Button
+            android:id="@+id/button4h"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="4dp"
+            android:text="4h"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button2h"
+            app:layout_constraintTop_toTopOf="@id/button05h" />
 
-    <Button
-        android:id="@+id/buttonConfirm"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="確定"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonClear" />
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="クリア"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button05h" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 人員選択ボタン -->
+        <Button
+            android:id="@+id/buttonSelectEmployees"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="適用する人員を選択 (1名)"
+            android:layout_marginTop="24dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:layout_constraintTop_toBottomOf="@id/buttonClear"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/buttonConfirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="確定"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonSelectEmployees" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

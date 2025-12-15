@@ -17,11 +17,16 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.overtimemanagesys_zan.adapter.EmployeeSelectionAdapter
+import kotlinx.coroutines.flow.collectLatest
+
 class OvertimeInputFragment : Fragment() {
 
     private var _binding: FragmentOvertimeInputBinding? = null
     private val binding get() = _binding!!
     private lateinit var repository: EmployeeRepository
+    private var selectedEmployeeIds: Set<Long> = emptySet()
     private var employeeId: Long = 0
     private var selectedDate: String = ""
     private var tempHours: Double = 0.0
@@ -44,6 +49,9 @@ class OvertimeInputFragment : Fragment() {
 
         repository = EmployeeRepository(requireContext())
         employeeId = arguments?.getLong("employeeId") ?: 0
+        if (employeeId != 0L) {
+            selectedEmployeeIds = setOf(employeeId)
+        }
         val dateArg = arguments?.getString("selectedDate")
         selectedDate = if (dateArg.isNullOrEmpty()) {
             DateUtils.getTodayString()
@@ -149,6 +157,21 @@ class OvertimeInputFragment : Fragment() {
         binding.buttonConfirm.setOnClickListener {
             saveOvertime()
         }
+
+        // 人員選択ボタンの設定
+        binding.buttonSelectEmployees.setOnClickListener {
+            val dialog = SelectEmployeesDialog(selectedEmployeeIds) { ids ->
+                selectedEmployeeIds = ids
+                updateSelectEmployeesButtonText()
+            }
+            dialog.show(parentFragmentManager, "SelectEmployeesDialog")
+        }
+        updateSelectEmployeesButtonText()
+    }
+
+    private fun updateSelectEmployeesButtonText() {
+        val count = selectedEmployeeIds.size
+        binding.buttonSelectEmployees.text = "適用する人員を選択 (${count}名)"
     }
 
     private fun addHours(hours: Double) {
@@ -212,11 +235,27 @@ class OvertimeInputFragment : Fragment() {
 
     private fun saveOvertime() {
         lifecycleScope.launch {
-            repository.saveOvertimeRecord(employeeId, selectedDate, tempHours)
-            Toast.makeText(requireContext(), "残業時間を保存しました", Toast.LENGTH_SHORT).show()
+            if (selectedEmployeeIds.isEmpty()) {
+                Toast.makeText(requireContext(), "保存する人員を選択してください", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            // 選択された全ての人員に対して保存処理を実行
+            selectedEmployeeIds.forEach { id ->
+                repository.saveOvertimeRecord(id, selectedDate, tempHours)
+            }
             
-            // 合計を更新
-            loadCurrentMonthTotal()
+            val message = if (selectedEmployeeIds.size > 1) {
+                "${selectedEmployeeIds.size}人の残業時間を保存しました"
+            } else {
+                "残業時間を保存しました"
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            
+            // メインの従業員の合計を更新（他は画面に戻った時に更新されるはず）
+            if (selectedEmployeeIds.contains(employeeId)) {
+                loadCurrentMonthTotal()
+            }
             
             // 仮入力をリセット
             tempHours = 0.0
