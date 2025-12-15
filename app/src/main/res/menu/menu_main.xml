@@ -23,5 +23,5 @@
         android:orderInCategory="3"
         android:title="並び替え"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>

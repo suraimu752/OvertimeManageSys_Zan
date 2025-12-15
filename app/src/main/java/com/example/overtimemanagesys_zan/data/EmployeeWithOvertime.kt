@@ -5,6 +5,7 @@ data class EmployeeWithOvertime(
     val overtimeTwoMonthsAgo: Double,
     val overtimeLastMonth: Double,
     val overtimeThisMonth: Double,
-    val annualTotal: Double
+    val annualTotal: Double,
+    val monthsOver45Hours: Int = 0
 )
 

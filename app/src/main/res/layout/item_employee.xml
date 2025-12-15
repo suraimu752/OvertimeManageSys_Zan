@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:clipChildren="false"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clipChildren="false">
 
         <TextView
             android:id="@+id/textViewName"
@@ -78,6 +80,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.1875" />
+
+        <TextView
+            android:id="@+id/textViewMonthsOver45Hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@id/textViewAnnualTotal"
+            app:layout_constraintEnd_toEndOf="@id/textViewAnnualTotal"
+            android:layout_marginTop="-6dp"
+            android:layout_marginEnd="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -87,12 +87,22 @@ class FirstFragment : Fragment() {
                         employee.id, fiscalYearStart, fiscalYearEnd
                     )
 
+                    // 過去12ヶ月間で45時間を超えた月の回数を計算
+                    val past12MonthsPeriods = DateUtils.getPast12MonthsPeriods()
+                    val monthsOver45Hours = past12MonthsPeriods.count { (startDate, endDate) ->
+                        val monthlyHours = repository.getTotalHoursByDateRange(
+                            employee.id, startDate, endDate
+                        )
+                        monthlyHours > 45.0
+                    }
+
                     EmployeeWithOvertime(
                         employee = employee,
                         overtimeTwoMonthsAgo = twoMonthsAgo,
                         overtimeLastMonth = lastMonth,
                         overtimeThisMonth = thisMonth,
-                        annualTotal = annualTotal
+                        annualTotal = annualTotal,
+                        monthsOver45Hours = monthsOver45Hours
                     )
                 }
                 adapter.updateEmployeesWithOvertime(employeesWithOvertime)
@@ -160,6 +170,10 @@ class FirstFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 // ドラッグ終了時
                 (viewHolder as? EmployeeAdapter.EmployeeViewHolder)?.onDragEnd()
+                // 並び替え完了時に自動的に並び替えモードを終了
+                if (isSortMode) {
+                    saveSortOrder()
+                }
             }
         }
 

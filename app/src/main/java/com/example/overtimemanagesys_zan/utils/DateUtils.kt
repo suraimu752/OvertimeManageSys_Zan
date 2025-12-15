@@ -135,5 +135,41 @@ object DateUtils {
 
         return Pair(startDate.format(dateFormatter), endDate.format(dateFormatter))
     }
+
+    /**
+     * 過去12ヶ月間の各月の期間（21日～20日）のリストを取得
+     * 現在の月から過去12ヶ月分を返す
+     */
+    fun getPast12MonthsPeriods(): List<Pair<String, String>> {
+        val today = LocalDate.now()
+        val periods = mutableListOf<Pair<String, String>>()
+        
+        // 現在の月の期間を基準に、過去12ヶ月分を計算
+        var currentDate = today
+        if (currentDate.dayOfMonth < 21) {
+            // 20日以前の場合、前月の21日から今月20日までが今月の期間
+            currentDate = if (currentDate.monthValue == 1) {
+                LocalDate.of(currentDate.year - 1, 12, 21)
+            } else {
+                LocalDate.of(currentDate.year, currentDate.monthValue - 1, 21)
+            }
+        } else {
+            // 21日以降の場合、今月21日から来月20日までが今月の期間
+            currentDate = LocalDate.of(currentDate.year, currentDate.monthValue, 21)
+        }
+        
+        // 過去12ヶ月分の期間を計算
+        for (i in 0 until 12) {
+            val monthStart = currentDate.minusMonths(i.toLong())
+            val monthEnd = if (monthStart.monthValue == 12) {
+                LocalDate.of(monthStart.year + 1, 1, 20)
+            } else {
+                LocalDate.of(monthStart.year, monthStart.monthValue + 1, 20)
+            }
+            periods.add(Pair(monthStart.format(dateFormatter), monthEnd.format(dateFormatter)))
+        }
+        
+        return periods
+    }
 }
 

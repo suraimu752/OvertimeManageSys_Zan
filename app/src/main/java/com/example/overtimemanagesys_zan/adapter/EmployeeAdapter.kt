@@ -36,6 +36,11 @@ class EmployeeAdapter(
             binding.textViewLastMonth.text = "${employeeWithOvertime.overtimeLastMonth}"
             binding.textViewThisMonth.text = "${employeeWithOvertime.overtimeThisMonth}"
             binding.textViewAnnualTotal.text = "${employeeWithOvertime.annualTotal}"
+            
+            // 過去12ヶ月間で45時間を超えた月の回数を表示
+            val monthsOver45 = employeeWithOvertime.monthsOver45Hours
+            binding.textViewMonthsOver45Hours.text = "$monthsOver45"
+            binding.textViewMonthsOver45Hours.visibility = android.view.View.VISIBLE
 
             // 並び替えモード時の視覚的フィードバック
             if (sortMode) {

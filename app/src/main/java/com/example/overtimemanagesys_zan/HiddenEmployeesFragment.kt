@@ -75,12 +75,22 @@ class HiddenEmployeesFragment : Fragment() {
                         employee.id, fiscalYearStart, fiscalYearEnd
                     )
 
+                    // 過去12ヶ月間で45時間を超えた月の回数を計算
+                    val past12MonthsPeriods = DateUtils.getPast12MonthsPeriods()
+                    val monthsOver45Hours = past12MonthsPeriods.count { (startDate, endDate) ->
+                        val monthlyHours = repository.getTotalHoursByDateRange(
+                            employee.id, startDate, endDate
+                        )
+                        monthlyHours > 45.0
+                    }
+
                     EmployeeWithOvertime(
                         employee = employee,
                         overtimeTwoMonthsAgo = twoMonthsAgo,
                         overtimeLastMonth = lastMonth,
                         overtimeThisMonth = thisMonth,
-                        annualTotal = annualTotal
+                        annualTotal = annualTotal,
+                        monthsOver45Hours = monthsOver45Hours
                     )
                 }
                 adapter.updateEmployeesWithOvertime(employeesWithOvertime)
