@@ -48,31 +48,10 @@ object DateUtils {
      */
     fun getLastMonthPeriod(): Pair<String, String> {
         val today = LocalDate.now()
-        val startDate: LocalDate
-        val endDate: LocalDate
+        val baseDate = if (today.dayOfMonth >= 21) today else today.minusMonths(1)
 
-        if (today.dayOfMonth >= 21) {
-            // 今月21日以降の場合、先月21日～今月20日
-            if (today.monthValue == 1) {
-                startDate = LocalDate.of(today.year - 1, 12, 21)
-            } else {
-                startDate = LocalDate.of(today.year, today.monthValue - 1, 21)
-            }
-            endDate = LocalDate.of(today.year, today.month, 20)
-        } else {
-            // 今月20日以前の場合、先々月21日～先月20日
-            val twoMonthsAgo = if (today.monthValue <= 2) {
-                LocalDate.of(today.year - 1, 12 + today.monthValue - 1, 21)
-            } else {
-                LocalDate.of(today.year, today.monthValue - 2, 21)
-            }
-            startDate = twoMonthsAgo
-            if (today.monthValue == 1) {
-                endDate = LocalDate.of(today.year - 1, 12, 20)
-            } else {
-                endDate = LocalDate.of(today.year, today.monthValue - 1, 20)
-            }
-        }
+        val startDate = baseDate.minusMonths(1).withDayOfMonth(21)
+        val endDate = baseDate.withDayOfMonth(20)
 
         return Pair(startDate.format(dateFormatter), endDate.format(dateFormatter))
     }
@@ -82,35 +61,10 @@ object DateUtils {
      */
     fun getTwoMonthsAgoPeriod(): Pair<String, String> {
         val today = LocalDate.now()
-        val startDate: LocalDate
-        val endDate: LocalDate
+        val baseDate = if (today.dayOfMonth >= 21) today else today.minusMonths(1)
 
-        if (today.dayOfMonth >= 21) {
-            // 今月21日以降の場合、先々月21日～先月20日
-            if (today.monthValue <= 2) {
-                startDate = LocalDate.of(today.year - 1, 12 + today.monthValue - 1, 21)
-            } else {
-                startDate = LocalDate.of(today.year, today.monthValue - 2, 21)
-            }
-            if (today.monthValue == 1) {
-                endDate = LocalDate.of(today.year - 1, 12, 20)
-            } else {
-                endDate = LocalDate.of(today.year, today.monthValue - 1, 20)
-            }
-        } else {
-            // 今月20日以前の場合、先々々月21日～先々月20日
-            val threeMonthsAgo = if (today.monthValue <= 3) {
-                LocalDate.of(today.year - 1, 12 + today.monthValue - 2, 21)
-            } else {
-                LocalDate.of(today.year, today.monthValue - 3, 21)
-            }
-            startDate = threeMonthsAgo
-            if (today.monthValue <= 2) {
-                endDate = LocalDate.of(today.year - 1, 12 + today.monthValue - 1, 20)
-            } else {
-                endDate = LocalDate.of(today.year, today.monthValue - 2, 20)
-            }
-        }
+        val startDate = baseDate.minusMonths(2).withDayOfMonth(21)
+        val endDate = baseDate.minusMonths(1).withDayOfMonth(20)
 
         return Pair(startDate.format(dateFormatter), endDate.format(dateFormatter))
     }
