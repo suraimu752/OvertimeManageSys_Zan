@@ -1,7 +1,6 @@
 package com.example.overtimemanagesys_zan
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +14,8 @@ import com.example.overtimemanagesys_zan.databinding.FragmentOvertimeInputBindin
 import com.example.overtimemanagesys_zan.utils.DateUtils
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.overtimemanagesys_zan.adapter.EmployeeSelectionAdapter
-import kotlinx.coroutines.flow.collectLatest
 
 class OvertimeInputFragment : Fragment() {
 
@@ -32,7 +28,7 @@ class OvertimeInputFragment : Fragment() {
     private var tempHours: Double = 0.0
     private var isMinusMode: Boolean = false
     private var defaultButtonTintList: android.content.res.ColorStateList? = null
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private val dateFormatter = DateUtils.getDateFormatter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,14 +91,6 @@ class OvertimeInputFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // カレンダーから戻ってきた時に確実にリスナーを設定
-        setFragmentResultListener("selectedDate") { requestKey, bundle ->
-            val date = bundle.getString("date")
-            if (!date.isNullOrEmpty()) {
-                updateSelectedDate(date)
-            }
-        }
-        // メニューを更新（非表示にする）
         requireActivity().invalidateOptionsMenu()
     }
 

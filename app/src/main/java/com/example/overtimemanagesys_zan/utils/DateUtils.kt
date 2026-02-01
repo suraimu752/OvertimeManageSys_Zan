@@ -4,7 +4,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object DateUtils {
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    /** YYYY-MM-DD 形式の日付パターン（DB・API用） */
+    const val DATE_FORMAT_PATTERN = "yyyy-MM-dd"
+
+    private val dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+
+    /** 日付フォーマッターを取得（他クラスで yyyy-MM-dd を使う場合に利用） */
+    fun getDateFormatter(): DateTimeFormatter = dateFormatter
 
     /**
      * 今日の日付をYYYY-MM-DD形式で取得

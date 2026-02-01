@@ -9,12 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.overtimemanagesys_zan.adapter.CalendarAdapter
-import com.example.overtimemanagesys_zan.adapter.CalendarDateItem
 import com.example.overtimemanagesys_zan.data.EmployeeRepository
 import com.example.overtimemanagesys_zan.databinding.FragmentCalendarBinding
+import com.example.overtimemanagesys_zan.utils.generateCalendarItems
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.YearMonth
 
 class DateSelectCalendarFragment : Fragment() {
@@ -73,75 +71,11 @@ class DateSelectCalendarFragment : Fragment() {
         binding.textViewMonth.text = "${currentYearMonth.year}年${currentYearMonth.monthValue}月"
 
         lifecycleScope.launch {
-            val calendarItems = generateCalendarItems(currentYearMonth)
+            val calendarItems = generateCalendarItems(currentYearMonth) { date ->
+                repository.getOvertimeRecordsByDate(date).sumOf { it.hours }
+            }
             adapter.submitList(calendarItems)
         }
-    }
-
-    private suspend fun generateCalendarItems(yearMonth: YearMonth): List<CalendarDateItem> {
-        val firstDay = yearMonth.atDay(1)
-        val lastDay = yearMonth.atEndOfMonth()
-        val startOfWeek = firstDay.dayOfWeek.value % 7 // 日曜日を0にする
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val today = LocalDate.now()
-        val todayString = today.format(dateFormatter)
-
-        val items = mutableListOf<CalendarDateItem>()
-
-        // 前月の日付（空白）
-        for (i in 0 until startOfWeek) {
-            val date = firstDay.minusDays((startOfWeek - i).toLong())
-            val dateString = date.format(dateFormatter)
-            val isToday = dateString == todayString
-            val isFuture = date.isAfter(today)
-            items.add(CalendarDateItem(
-                date = dateString,
-                day = date.dayOfMonth,
-                hours = 0.0,
-                isCurrentMonth = false,
-                isToday = isToday,
-                isFuture = isFuture
-            ))
-        }
-
-        // 今月の日付
-        var currentDate = firstDay
-        while (!currentDate.isAfter(lastDay)) {
-            val dateString = currentDate.format(dateFormatter)
-            // 特定日付の全従業員の残業時間を取得して合計
-            val records = repository.getOvertimeRecordsByDate(dateString)
-            val totalHours = records.sumOf { it.hours }
-            val isToday = dateString == todayString
-            val isFuture = currentDate.isAfter(today)
-            items.add(CalendarDateItem(
-                date = dateString,
-                day = currentDate.dayOfMonth,
-                hours = totalHours,
-                isCurrentMonth = true,
-                isToday = isToday,
-                isFuture = isFuture
-            ))
-            currentDate = currentDate.plusDays(1)
-        }
-
-        // 次月の日付（空白） - 7列のグリッドを埋める
-        val remainingDays = (7 - (items.size % 7)) % 7
-        for (i in 1..remainingDays) {
-            val date = lastDay.plusDays(i.toLong())
-            val dateString = date.format(dateFormatter)
-            val isToday = dateString == todayString
-            val isFuture = date.isAfter(today)
-            items.add(CalendarDateItem(
-                date = dateString,
-                day = date.dayOfMonth,
-                hours = 0.0,
-                isCurrentMonth = false,
-                isToday = isToday,
-                isFuture = isFuture
-            ))
-        }
-
-        return items
     }
 
     override fun onDestroyView() {

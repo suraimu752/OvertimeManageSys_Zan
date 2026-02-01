@@ -1,6 +1,7 @@
 package com.example.overtimemanagesys_zan.data
 
 import android.content.Context
+import com.example.overtimemanagesys_zan.utils.DateUtils
 import kotlinx.coroutines.flow.Flow
 
 class EmployeeRepository(private val context: Context) {
@@ -75,5 +76,35 @@ class EmployeeRepository(private val context: Context) {
 
     suspend fun getMaxDisplayOrder(): Int {
         return employeeDao.getMaxDisplayOrder() ?: -1
+    }
+
+    /**
+     * 従業員リストに対して期間別残業時間・年度合計・45時間超え月数を計算し、
+     * [EmployeeWithOvertime] のリストを返す。
+     */
+    suspend fun computeEmployeesWithOvertime(employees: List<Employee>): List<EmployeeWithOvertime> {
+        val (twoMonthsAgoStart, twoMonthsAgoEnd) = DateUtils.getTwoMonthsAgoPeriod()
+        val (lastMonthStart, lastMonthEnd) = DateUtils.getLastMonthPeriod()
+        val (thisMonthStart, thisMonthEnd) = DateUtils.getCurrentMonthPeriod()
+        val (fiscalYearStart, fiscalYearEnd) = DateUtils.getCurrentFiscalYearPeriod()
+        val past12MonthsPeriods = DateUtils.getPast12MonthsPeriods()
+
+        return employees.map { employee ->
+            val twoMonthsAgo = getTotalHoursByDateRange(employee.id, twoMonthsAgoStart, twoMonthsAgoEnd)
+            val lastMonth = getTotalHoursByDateRange(employee.id, lastMonthStart, lastMonthEnd)
+            val thisMonth = getTotalHoursByDateRange(employee.id, thisMonthStart, thisMonthEnd)
+            val annualTotal = getTotalHoursByDateRange(employee.id, fiscalYearStart, fiscalYearEnd)
+            val monthsOver45Hours = past12MonthsPeriods.count { (startDate, endDate) ->
+                getTotalHoursByDateRange(employee.id, startDate, endDate) > 45.0
+            }
+            EmployeeWithOvertime(
+                employee = employee,
+                overtimeTwoMonthsAgo = twoMonthsAgo,
+                overtimeLastMonth = lastMonth,
+                overtimeThisMonth = thisMonth,
+                annualTotal = annualTotal,
+                monthsOver45Hours = monthsOver45Hours
+            )
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.overtimemanagesys_zan
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,17 +31,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        // 現在のFragmentを取得
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as? NavHostFragment
-        val currentFragment = navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
-        
-        // FirstFragment以外ではメニューを非表示
+        val currentFragment = getCurrentFragment()
         val isFirstFragment = currentFragment is FirstFragment
         val isSortMode = isFirstFragment && currentFragment is FirstFragment && currentFragment.isSortMode()
         
@@ -78,9 +72,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_sort -> {
-                // FirstFragmentの並び替えモードを切り替え
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as? NavHostFragment
-                val currentFragment = navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
+                val currentFragment = getCurrentFragment()
                 if (currentFragment is FirstFragment) {
                     if (currentFragment.isSortMode()) {
                         currentFragment.saveSortOrder()
@@ -98,5 +90,12 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    /** ナビゲーションホスト内の現在表示中の Fragment を取得する */
+    private fun getCurrentFragment(): Fragment? {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_content_main) as? NavHostFragment
+        return navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
     }
 }

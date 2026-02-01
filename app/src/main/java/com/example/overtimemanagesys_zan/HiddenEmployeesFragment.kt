@@ -11,7 +11,6 @@ import com.example.overtimemanagesys_zan.adapter.EmployeeAdapter
 import com.example.overtimemanagesys_zan.data.EmployeeRepository
 import com.example.overtimemanagesys_zan.data.EmployeeWithOvertime
 import com.example.overtimemanagesys_zan.databinding.FragmentHiddenEmployeesBinding
-import com.example.overtimemanagesys_zan.utils.DateUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -54,45 +53,7 @@ class HiddenEmployeesFragment : Fragment() {
         // 非表示の従業員リストを監視
         viewLifecycleOwner.lifecycleScope.launch {
             repository.getHiddenEmployees().collectLatest { employees ->
-                // 各従業員の期間ごとの残業時間を計算
-                val employeesWithOvertime = employees.map { employee ->
-                    val (twoMonthsAgoStart, twoMonthsAgoEnd) = DateUtils.getTwoMonthsAgoPeriod()
-                    val (lastMonthStart, lastMonthEnd) = DateUtils.getLastMonthPeriod()
-                    val (thisMonthStart, thisMonthEnd) = DateUtils.getCurrentMonthPeriod()
-                    val (fiscalYearStart, fiscalYearEnd) = DateUtils.getCurrentFiscalYearPeriod()
-
-                    val twoMonthsAgo = repository.getTotalHoursByDateRange(
-                        employee.id, twoMonthsAgoStart, twoMonthsAgoEnd
-                    )
-                    val lastMonth = repository.getTotalHoursByDateRange(
-                        employee.id, lastMonthStart, lastMonthEnd
-                    )
-                    val thisMonth = repository.getTotalHoursByDateRange(
-                        employee.id, thisMonthStart, thisMonthEnd
-                    )
-                    // 年度期間（3/21～翌年3/20）の合計を計算
-                    val annualTotal = repository.getTotalHoursByDateRange(
-                        employee.id, fiscalYearStart, fiscalYearEnd
-                    )
-
-                    // 過去12ヶ月間で45時間を超えた月の回数を計算
-                    val past12MonthsPeriods = DateUtils.getPast12MonthsPeriods()
-                    val monthsOver45Hours = past12MonthsPeriods.count { (startDate, endDate) ->
-                        val monthlyHours = repository.getTotalHoursByDateRange(
-                            employee.id, startDate, endDate
-                        )
-                        monthlyHours > 45.0
-                    }
-
-                    EmployeeWithOvertime(
-                        employee = employee,
-                        overtimeTwoMonthsAgo = twoMonthsAgo,
-                        overtimeLastMonth = lastMonth,
-                        overtimeThisMonth = thisMonth,
-                        annualTotal = annualTotal,
-                        monthsOver45Hours = monthsOver45Hours
-                    )
-                }
+                val employeesWithOvertime = repository.computeEmployeesWithOvertime(employees)
                 adapter.updateEmployeesWithOvertime(employeesWithOvertime)
             }
         }

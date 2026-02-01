@@ -9,17 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.overtimemanagesys_zan.adapter.DateOvertimeListAdapter
+import com.example.overtimemanagesys_zan.data.EmployeeOvertimeItem
 import com.example.overtimemanagesys_zan.data.EmployeeRepository
 import com.example.overtimemanagesys_zan.databinding.FragmentDateOvertimeListBinding
+import com.example.overtimemanagesys_zan.utils.DateUtils
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
-data class EmployeeOvertimeItem(
-    val employeeId: Long,
-    val employeeName: String,
-    val hours: Double
-)
 
 class DateOvertimeListFragment : Fragment() {
 
@@ -63,8 +58,8 @@ class DateOvertimeListFragment : Fragment() {
 
         // 日付表示を更新
         try {
-            val date = LocalDate.parse(selectedDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            binding.textViewDate.text = "日付: ${date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"))}"
+            val date = LocalDate.parse(selectedDate, DateUtils.getDateFormatter())
+            binding.textViewDate.text = "日付: ${date.format(java.time.format.DateTimeFormatter.ofPattern("yyyy年MM月dd日"))}"
         } catch (e: Exception) {
             binding.textViewDate.text = "日付: $selectedDate"
         }
